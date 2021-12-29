@@ -19,12 +19,14 @@ def login(request):
         # se não existe, tente usar o chromedriver publico no ambiente
         driver_ = webdriver.Chrome()
 
+    loginpage = LoginPage(driver_)
+
     def sair():
         driver_.quit()
 
     # sinalizando o fim da execução para o ambiente
     request.addfinalizer(sair)
-    return driver_
+    return loginpage
 
 
 # def old_test_login_valido(driver):
@@ -45,8 +47,12 @@ parametros = [
 
 @pytest.mark.parametrize('username, password, resultado_esperado', parametros)
 def testar_login(login, username, password, resultado_esperado):
-    loginpage = LoginPage(login)
     # Preencher o usuário e senha clicar no botão
-    loginpage.com_(username, password)
+    login.com_(username, password)
     # Validar a mensagem
-    assert resultado_esperado in loginpage.vejo_mensagem()
+    assert resultado_esperado in login.vejo_mensagem()
+
+
+def testar_login_simples(login):
+    login.com_('tomsmith', 'SuperSecretPassword!')
+    assert 'You logged into a secure area!' in login.vejo_mensagem()
