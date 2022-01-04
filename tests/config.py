@@ -1,5 +1,5 @@
 baseurl = ''
-host = ''
-browser = ''
+host = 'local'
+browser = 'firefox'
 browserversion = ''
 platform = ''

@@ -16,7 +16,7 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
-        self._entrar('http://the-internet.herokuapp.com/login')
+        self._entrar('/login')
 
         # validando se o formulário de ‘login’ está visível
         assert self._aparecer(self._login_form)

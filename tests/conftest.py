@@ -41,15 +41,17 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture
-def driver(request):
-    config.baseurl = request.config.getoptions('--baseurl')
-    config.host = request.config.getoptions('--host')
-    config.browser = request.config.getoptions('--browser')
-    config.browserversion = request.config.getoptions('--browserversion')
-    config.platform = request.config.getoptions('--platform')
-
+def driver(request):  # Inicialização dos testes — similar a um Before / Setup
+    if config.baseurl is '':
+        config.baseurl = request.config.getoption('--baseurl')
+    if config.host is '':
+        config.host = request.config.getoption('--host').lower()
+    if config.browser is '':
+        config.browser = request.config.getoption('--browser').lower()
+    config.browserversion = request.config.getoption('--browserversion').lower()
+    config.platform = request.config.getoption('--platform').lower()
     if config.host == 'saucelabs':
-        test_name = request.node.name   # nome do teste
+        test_name = request.node.name  # nome do teste
         capabilities = {
             'browserName': config.browser,
             'browserVersion': config.browserversion,
@@ -58,10 +60,11 @@ def driver(request):
                 'name': test_name
             }
         }
-        _credentials = os.environ[credentials.SAUCE_USERNAME] + ':' + os.environ[credentials.SAUCE_ACCESS_KEY]
+        # _credentials = os.environ[credentials.SAUCE_USERNAME] + ':' + os.environ[credentials.SAUCE_ACCESS_KEY]
+        _credentials = credentials.SAUCE_USERNAME + ':' + credentials.SAUCE_ACCESS_KEY
         _url = 'https://' + _credentials + '@ondemand.us-west-1.saucelabs.com:443/wd/hub'
         driver_ = webdriver.Remote(_url, capabilities)
-    else:   # execução local / localhost
+    else:  # execução local / localhost
         if config.browser == 'chrome':
             _chromedriver = os.path.join(os.getcwd(), 'vendor', 'chromedriver.exe')
             if os.path.isfile(_chromedriver):
@@ -69,8 +72,32 @@ def driver(request):
             else:
                 driver_ = webdriver.Chrome()
         elif config.browser == 'firefox':
+            options = webdriver.FirefoxOptions()
+            options.binary_location = os.path.expanduser('~\\AppData\\Local\\Mozilla Firefox\\firefox.exe')
             _geckodriver = os.path.join(os.getcwd(), 'vendor', 'geckodriver.exe')
             if os.path.isfile(_geckodriver):
-                driver_ = webdriver.Firefox(_geckodriver)
+                driver_ = webdriver.Firefox(executable_path=_geckodriver, options=options)
             else:
                 driver_ = webdriver.Firefox()
+
+    def sair():  # Finalização dos testes — similar ao After ou TearDown
+        # sinalização de passou ou falhou conforme o retorno da requisição
+        if config.host == 'saucelabs':
+            sauce_result = 'failed' if request.node.rep_call.failed else 'passed'
+
+            driver_.execute_script('sauce:job-result={}'.format(sauce_result))
+
+        driver_.quit()
+
+    request.addfinalizer(sair)
+    return driver_
+
+
+@pytest.hookimpl(hookwrapper=True, tryfirst=True)  # Imprementação do gatilho de comunicação com o SauceLabs
+def pytest_runtest_makereport(item, call):
+    # parâmetros para geração do relatório / informações dos resultados
+    outcome = yield
+    rep = outcome.get_result()
+
+    # definir atributos para o relatório
+    setattr(item, 'rep_' + rep.when, rep)

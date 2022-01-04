@@ -1,32 +1,32 @@
-import os
-
 import pytest
-from selenium import webdriver
-from pages.login_page import LoginPage
+from pages import login_page
+# from pages.login_page import LoginPage
 
 
 @pytest.fixture
-def login(request):
-    # variável local para armazenar o caminho do ChromeDriver
+def login(driver):      # deixou de receber request e recebe diretamente driver
+    return login_page.LoginPage(driver)
 
-    # print(os.getcwd()) C:\Users\jaque\PycharmProjects\Heroku_Login\tests
-    _chromedriver = os.path.join(os.getcwd(), 'vendor', 'chromedriver.exe')
-
-    if os.path.isfile(_chromedriver):
-        # se existe um chromedriver no projeto, instancie com
-        driver_ = webdriver.Chrome(_chromedriver)
-    else:
-        # se não existe, tente usar o chromedriver publico no ambiente
-        driver_ = webdriver.Chrome()
-
-    loginpage = LoginPage(driver_)
-
-    def sair():
-        driver_.quit()
-
-    # sinalizando o fim da execução para o ambiente
-    request.addfinalizer(sair)
-    return loginpage
+    # ---- MODIFICADO PARA O CONFTEST ---- #
+    # # variável local para armazenar o caminho do ChromeDriver
+    #
+    # # print(os.getcwd()) C:\Users\jaque\PycharmProjects\Heroku_Login\tests
+    # _chromedriver = os.path.join(os.getcwd(), 'vendor', 'chromedriver.exe')
+    #
+    # if os.path.isfile(_chromedriver):
+    #     # se existe um chromedriver no projeto, instancie com
+    #     driver_ = webdriver.Chrome(_chromedriver)
+    # else:
+    #     # se não existe, tente usar o chromedriver publico no ambiente
+    #     driver_ = webdriver.Chrome()
+    # loginpage = LoginPage(driver_)
+    #
+    # def sair():
+    #     driver_.quit()
+    #
+    # # sinalizando o fim da execução para o ambiente
+    # request.addfinalizer(sair)
+    # return loginpage
 
 
 # def old_test_login_valido(driver):
