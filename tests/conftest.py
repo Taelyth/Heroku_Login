@@ -73,10 +73,12 @@ def driver(request):  # Inicialização dos testes — similar a um Before / Set
                 driver_ = webdriver.Chrome()
         elif config.browser == 'firefox':
             options = webdriver.FirefoxOptions()
-            options.binary_location = os.path.expanduser('~\\AppData\\Local\\Mozilla Firefox\\firefox.exe')
+            options.binary_location = 'C:\\Program Files\\Mozilla Firefox\\firefox.exe'
+            # options.binary_location = os.path.expanduser('~\\AppData\\Local\\Mozilla Firefox\\firefox.exe')
             _geckodriver = os.path.join(os.getcwd(), 'vendor', 'geckodriver.exe')
             if os.path.isfile(_geckodriver):
                 driver_ = webdriver.Firefox(executable_path=_geckodriver, options=options)
+                # driver_ = webdriver.Firefox(_geckodriver)
             else:
                 driver_ = webdriver.Firefox()
 
