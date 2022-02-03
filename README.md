@@ -1,7 +1,7 @@
 # Heroku_Login
 Projeto criado para acompanhar as aulas do curso [Formação em Teste de Software][Iterasys] em Python utilizando o Selenium.
 
-Neste projeto é possível rodar testes web tanto no [Saucelabs][Saucelabs], que é um site de testes em Cloud, assim como rodar localmente.
+Neste projeto é possível rodar **testes web** tanto no [Saucelabs][Saucelabs], que é um site de testes em Cloud, assim como rodar localmente.
 
 Ele foi criado para treinamento em como utilizar a formatação **Page Object**, onde os elementos e testes ficam separados por script/página.
 
