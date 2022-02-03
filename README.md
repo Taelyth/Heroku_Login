@@ -56,7 +56,7 @@ platform = 'O valor default é Windows 10, ele é usado apenas nos testes que ro
 
 `vendor` Diretório para armazenar os drivers dos navegadores utilizados pelo Selenium.
 
-`config.py` Configuração do ambiente onde rodará o teste, conforme explicado acima
+`config.py` Configuração do ambiente onde rodará o teste, conforme explicado acima.
 
 `conftest.py` Script base utilizado para rodar o teste no ambiente, ele enxerga as informações adicionadas no arquivo `config.py`.
 
