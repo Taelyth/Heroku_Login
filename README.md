@@ -1,5 +1,5 @@
 # Heroku_Login
-Projeto criado para acompanhar as aulas do curso [Formação em Teste de Software][Iterasys] em Python utilizando o Selenium.
+Projeto criado para acompanhar as aulas do curso [Formação em Teste de Software][Iterasys] em **Python** utilizando **Selenium**.
 
 Neste projeto é possível rodar **testes web** tanto no [Saucelabs][Saucelabs], que é um site de testes em Cloud, assim como rodar localmente.
 
